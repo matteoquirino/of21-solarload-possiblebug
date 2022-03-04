@@ -1,0 +1,75 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      radiationProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+radiation       on;
+
+radiationModel  viewFactor;
+
+solarLoadCoeffs
+{
+    sunDirectionModel       constant;
+    sunDirection            (1 0 0);
+
+    sunLoadModel 	    constant;
+    directSolarRad          1400;
+    diffuseSolarRad	    0;
+
+    // Energy spectrum
+    spectralDistribution    (1);
+
+
+    // Radiative flux coupling flags
+    solidCoupled    true; // Couple through Qr the solid regions (default true)
+    wallCoupled     true;  // Couple through Qr wall patches (default false)
+
+    // Reflecting rays
+    useReflectedRays false;
+
+    absorptionEmissionModel none;
+    scatterModel            none;
+    sootModel               none;
+}
+
+
+viewFactorCoeffs
+{
+    smoothing true; //Smooth view factor matrix (use when in a close surface
+                    //to force Sum(Fij = 1)
+    constantEmissivity true; //constant emissivity on surfaces.
+
+    nBands    1;
+
+    useSolarLoad       true;
+}
+
+// Number of flow iterations per radiation iteration
+solverFreq 3;
+
+absorptionEmissionModel constantAbsorptionEmission;
+
+constantAbsorptionEmissionCoeffs
+{
+    absorptivity    absorptivity    [0 -1 0 0 0 0 0] 0.0;
+    emissivity      emissivity      [0 -1 0 0 0 0 0] 0.0;
+    E               E               [1 -1 -3 0 0 0 0] 0;
+}
+
+scatterModel    none;
+
+sootModel       none;
+
+
+// ************************************************************************* //

@@ -1,0 +1,37 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+./Allclean
+./Allrun.pre
+
+#Running changedict
+listsolid=$(egrep "solid" ./constant/regionProperties | egrep -o '\(.*\)' | sed -e 's:(::' -e 's:)::')
+listfluid=$(egrep "fluid" ./constant/regionProperties | egrep -o '\(.*\)' | sed -e 's:(::' -e 's:)::')
+
+echo $listsolid
+echo $listfluid
+
+# Decompose
+runApplication decomposePar -allRegions
+
+# Agglomerate patch faces
+for region in $listfluid
+do
+    runParallel -s "$region" \
+        faceAgglomerate -region "$region" -dict constant/viewFactorsDict
+done
+
+# Generate view factors
+for region in $listfluid
+do
+    runParallel -s "$region" \
+        viewFactorsGen -region "$region"
+done
+
+# Run
+runParallel $(getApplication)
+
+# Reconstruct
+runApplication reconstructPar -allRegions

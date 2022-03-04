@@ -1,0 +1,17 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/CleanFunctions      # Tutorial clean functions
+#------------------------------------------------------------------------------
+
+cleanCase0
+
+rm -rf VTK
+find ./constant/triSurface -type f -name '*.eMesh' -delete
+#find ./constant/ -mindepth 1 -maxdepth 1 -type d -not -name 'tri*' -and -not -name '.' -exec rm -r {} ';'
+#find ./constant -maxdepth 1 -type f -not \( -name 'g' -or -name 'region*' \) -delete
+#find ./system/ -mindepth 1 -maxdepth 1 -type d -not -name '.' -exec rm -r {} ';'
+#find ./system -maxdepth 1 -type f -not \( -name 'fv*' -or -name '*Dict*' \) -delete
+rm -rf constant/cellToRegion
+
+
+#------------------------------------------------------------------------------

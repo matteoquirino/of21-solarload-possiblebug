@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Eliminate spaces in file names
+find . -name "* *" -type f | rename 's/ //g'
+
+list_files=$(ls | grep '.stl')
+
+echo $list_files
+
+# Rename files
+for file in $list_files; do
+	mv $file ${file##*-}	
+done
+
+# Output list of file to be put in region properties
+echo $(ls | grep stl | cut -d'.' -f1 | tr '\n' ' ')
